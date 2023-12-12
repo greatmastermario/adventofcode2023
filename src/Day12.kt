@@ -7,15 +7,25 @@ fun main() {
         while (corruptIdx < corrupt.length && configIdx < config.size) {
             when (corrupt[corruptIdx]) {
                 '#' -> {
-                    tempCnt++
+                    for (hashCnt in tempCnt..<config[configIdx]) {
+                        if (corruptIdx > corrupt.lastIndex || corrupt[corruptIdx++] == '.') {
+                            return 0
+                        }
+                        tempCnt++
+                    }
+                    if (corruptIdx < corrupt.length && corrupt[corruptIdx] !in listOf('.', '?')) {
+                        return 0
+                    }
                 }
                 '.' -> {
                     when {
                         tempCnt == config[configIdx] -> {
                             tempCnt = 0
                             configIdx++
+                            corruptIdx++
                         }
                         tempCnt > 0 -> return 0
+                        else -> corruptIdx++
                     }
                 }
                 '?' -> {
@@ -26,7 +36,6 @@ fun main() {
                     return count
                 }
             }
-            corruptIdx++
         }
         when {
             configIdx == config.lastIndex && tempCnt == config[configIdx] -> return 1
@@ -70,5 +79,5 @@ fun main() {
 
     val input = readInput("Day12")
     part1(input).println()
-    part2(input).println()
+    part2(testInput).println()
 }
